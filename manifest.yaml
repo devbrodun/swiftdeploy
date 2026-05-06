@@ -1,7 +1,7 @@
 services:
   image: swift-deploy-1-node:latest
   port: 3000
-  mode: canary
+  mode: stable
   app_version: "1.0.0"
   restart_policy: unless-stopped
   log_volume: swiftdeploy-logs
@@ -10,6 +10,20 @@ nginx:
   image: nginx:latest
   port: 8080
   proxy_timeout: 30
+
+opa:
+  image: openpolicyagent/opa:latest-rootless
+  port: 8181
+
+policy:
+  infrastructure:
+    min_disk_free_gb: 10.0
+    max_cpu_load: 2.0
+    min_mem_free_percent: 10.0
+  canary:
+    max_error_rate_percent: 1.0
+    max_p99_latency_ms: 500
+    min_sample_size: 10
 
 network:
   name: swiftdeploy-net

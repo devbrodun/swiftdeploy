@@ -1,0 +1,12 @@
+{"event": "pre_deploy_check", "host_stats": {"disk_free_gb": 39.07, "cpu_load": 0.84, "mem_free_percent": 20.8}, "opa_allow": false, "opa_reasons": ["OPA data upload failed: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"], "timestamp": "2026-05-06T11:56:06.116585+00:00"}
+{"event": "pre_deploy_check", "host_stats": {"disk_free_gb": 38.57, "cpu_load": 0.56, "mem_free_percent": 20.9}, "opa_allow": true, "opa_reasons": ["All checks passed"], "timestamp": "2026-05-06T16:46:25.509479+00:00"}
+{"event": "deploy", "status": "success", "timestamp": "2026-05-06T16:46:25.574879+00:00"}
+{"event": "status_scrape", "rps": 0.0, "error_rate": 0.0, "p99_ms": 0, "mode": "stable", "chaos": "none", "infra_pass": true, "canary_pass": false, "timestamp": "2026-05-06T16:48:06.938841+00:00"}
+{"event": "status_scrape", "rps": 0.0, "error_rate": 0.0, "p99_ms": 0, "mode": "stable", "chaos": "none", "infra_pass": true, "canary_pass": false, "timestamp": "2026-05-06T16:48:13.271686+00:00"}
+{"event": "status_scrape", "rps": 0.0, "error_rate": 0.0, "p99_ms": 0, "mode": "stable", "chaos": "none", "infra_pass": true, "canary_pass": false, "timestamp": "2026-05-06T16:48:19.520469+00:00"}
+{"event": "status_scrape", "rps": 0.0, "error_rate": 0.0, "p99_ms": 0, "mode": "stable", "chaos": "none", "infra_pass": true, "canary_pass": false, "timestamp": "2026-05-06T16:48:25.755960+00:00"}
+{"event": "pre_promote_check", "target_mode": "canary", "metrics": {"error_rate_percent": 0.0, "p99_latency_ms": 0, "sample_size": 0}, "opa_allow": false, "opa_reasons": ["Insufficient traffic sample (0 requests). Need at least 10 to make a safe decision."], "timestamp": "2026-05-06T16:49:06.127000+00:00"}
+{"event": "promote", "mode": "stable", "status": "success", "timestamp": "2026-05-06T16:50:04.278803+00:00"}
+{"event": "pre_deploy_check", "host_stats": {"disk_free_gb": 38.05, "cpu_load": 0.56, "mem_free_percent": 25.8}, "opa_allow": true, "opa_reasons": ["All checks passed"], "timestamp": "2026-05-06T17:25:19.635747+00:00"}
+{"event": "deploy", "status": "success", "timestamp": "2026-05-06T17:25:27.885015+00:00"}
+{"event": "status_scrape", "rps": 0.0, "error_rate": 0.0, "p99_ms": 0, "mode": "stable", "chaos": "none", "infra_pass": true, "canary_pass": false, "timestamp": "2026-05-06T17:26:02.302332+00:00"}

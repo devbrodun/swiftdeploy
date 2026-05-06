@@ -13,25 +13,21 @@ services:
   service:
     image: swift-deploy-1-node:latest
     restart: unless-stopped
-    # Never expose service port to the host — all traffic routes through nginx
     expose:
       - "3000"
     environment:
-      MODE:        "canary"
+      MODE:        "stable"
       APP_VERSION: "1.0.0"
       APP_PORT:    "3000"
     networks:
       - swiftdeploy-net
     volumes:
       - swiftdeploy-logs:/app/logs
-    # Our custom app runs as non-root appuser (defined in Dockerfile)
-    # We can safely drop all capabilities here
     cap_drop:
       - ALL
     security_opt:
       - no-new-privileges:true
     healthcheck:
-      # python3 is guaranteed in our image; wget/curl may not be
       test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:3000/healthz')\" || exit 1"]
       interval: 15s
       timeout: 10s
@@ -51,8 +47,31 @@ services:
     depends_on:
       service:
         condition: service_healthy
-    # NOTE: nginx:latest needs to run as root briefly at startup to
-    # chown its temp directories (/var/cache/nginx/*).
-    # Dropping ALL capabilities prevents this and crashes nginx.
-    # Security is still enforced: no host port exposure for the app,
-    # read-only config mount, and dedicated network isolation.
+
+  opa:
+    image: openpolicyagent/opa:latest-rootless
+    restart: unless-stopped
+    # OPA is exposed to the HOST so the CLI can query it directly.
+    # It is NOT routed through nginx — nginx has no rule for /v1/data.
+    # This means OPA is reachable by swiftdeploy but not by public traffic.
+    ports:
+      - "8181:8181"
+    networks:
+      - swiftdeploy-net
+    volumes:
+      # Mount the entire policies/ directory so OPA loads all .rego files
+      - ./policies:/policies:ro
+    command:
+      - "run"
+      - "--server"
+      - "--addr=0.0.0.0:8181"
+      - "--log-level=error"
+      # Load all rego files from /policies
+      - "/policies"
+    healthcheck:
+      # Use opa's own binary to check health — wget may not exist in rootless image
+      test: ["CMD", "/opa", "eval", "--format", "raw", "true"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
