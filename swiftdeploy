@@ -99,7 +99,6 @@ def get_canary_policy(manifest):
     return {
         "max_error_rate_percent": float(policy.get("max_error_rate_percent", 1.0)),
         "max_p99_latency_ms": int(policy.get("max_p99_latency_ms", 500)),
-        "min_sample_size": int(policy.get("min_sample_size", 10)),
     }
 
 # ══════════════════════════════════════════════════════════════
@@ -818,15 +817,15 @@ def cmd_promote(target_mode):
 
     cmd_init()
 
-    info("Restarting service container...")
+    info("Recreating service container with updated MODE...")
     result = subprocess.run(
-        ["docker", "compose", "-f", COMPOSE_OUT, "restart", "service"],
+        ["docker", "compose", "-f", COMPOSE_OUT, "up", "-d", "--no-deps", "--force-recreate", "service"],
         cwd=BASE_DIR
     )
     if result.returncode != 0:
-        print(red("[ERROR] Failed to restart service container."))
+        print(red("[ERROR] Failed to recreate service container."))
         sys.exit(1)
-    ok("Service container restarted")
+    ok("Service container recreated")
 
     manifest   = load_manifest()
     nginx_port = manifest.get("nginx", {}).get("port", 8080)

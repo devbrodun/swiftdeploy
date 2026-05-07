@@ -68,10 +68,3 @@ services:
       - "--log-level=error"
       # Load all rego files from /policies
       - "/policies"
-    healthcheck:
-      # Use opa's own binary to check health — wget may not exist in rootless image
-      test: ["CMD", "/opa", "eval", "--format", "raw", "true"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
